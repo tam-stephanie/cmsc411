@@ -13,24 +13,10 @@ Compute __sin(x)__, __cos(x)__, __tan(x)__, and __e<sup>x</sup>__ of 32-bit IEEE
 ### Grading
 |Part|Percentage|
 |---|---|
-|Source Code|30%|
-|Oral Presentation|30%|
-|Final Report|30%|
+|Source Code<ul><li>Comments!</li><li>Reference sources used</li></ul>|30%|
+|Oral Presentation<ul><li>Duration: 10 minutes</li><li>Discussion<ul><li>Approach</li><li>Code</li><li>Issues & Solutions</li><li>Results</li><li>Demonstration (use Dayuan's numbers)</li></ul></li></ul>|30%|
+|Final Report <i>(for each cycle)</i><ul><li>Total computer cycles</li><li>Estimated CPI</li><li>Estimated total processing time, assuming system clock of 32kHz, 1MHz, and 1GHz</li><li>Description of implemented algorithms</li><li>Sample input and output</li></ul>|30%|
 |Peer Review|10%|
-_Source Code:_
-- Comments!
-- Reference sources used
-
-_Oral Presentation:_
-- Duration: 10 minutes
-- Discussion: Approach, Code, Issues & Solutions, Results, Demonstration
-
-_Final Report: (for each function)_
-- Total computer cycles
-- Estimated CPI
-- Estimated total processing time, assuming system clock of 32kHz, 1MHz, and 1GHz
-- Description of implemented algorithms
-- Sample input and output
 
 ## Documentation
 __sin(x)__
