@@ -15,3 +15,6 @@ Use ARMSim to write code that computes __sin(x)__, __cos(x)__, __tan(x)__, and _
 ### __tan(x)__
 
 ### __e<sup>x</sup>__
+
+### Link to cordic for dummies
+http://bsvi.ru/uploads/CORDIC--_10EBA/cordic.pdf
