@@ -27,6 +27,16 @@ __tan(x)__
 
 __e<sup>x</sup>__
 
+__sec(x)__
+
+  ...
+
+__sinh(x)__
+
+__cosh(x)__
+
+__tanh(x)__
+
 ### Helpful Notes
 **Links:**
 - [CORDIC for Dummies](http://bsvi.ru/uploads/CORDIC--_10EBA/cordic.pdf)
