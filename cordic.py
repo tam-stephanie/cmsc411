@@ -1,16 +1,36 @@
 import math
 
-ANGLE = 32
+ANGLE = 80.1
 
+
+def division(dividend, divisor, precision):
+    whole = 0 
+    iterate = 0
+    while iterate < precision:
+        
+        while dividend >= divisor:
+            whole += 1 * 2**(-iterate)
+            dividend -= divisor
+            
+        
+        divisor = divisor * 2**-1
+
+        iterate += 1
+
+    return whole
+        
+
+# Performs the cordic rotation to calculate sine and cosine
 def cordic(target, angles, tan, sin, cos):
+    # z
     currAngle = target
-    currTan = tan[0]
+
+    # y
     currSin = 0
+    # x
     currCos = gain(cos)
 
     for i in range(0, len(angles)):
-
-        print("currCos =", currCos, "currSin =", currSin)
 
         if currAngle <= 0:
             currAngle += angles[i]
@@ -20,8 +40,6 @@ def cordic(target, angles, tan, sin, cos):
             
             currCos = newCos
             currSin = newSin
-
-            currTan += tan[i]
 
 
         elif currAngle > 0:
@@ -33,11 +51,10 @@ def cordic(target, angles, tan, sin, cos):
             currCos = newCos
             currSin = newSin
 
-            currTan -= tan[i]
 
-    print ("currSin =", currSin, "currCos =", currCos)
-    
+    return currSin, currCos
 
+# Calculates the gain
 def gain(cosTable):
     gain = 1
     for i in range(len(cosTable)):
@@ -55,11 +72,14 @@ def main():
 
     cos = [0.707, 0.894, 0.970, 0.992, 0.998, 0.999, 1, 1, 1, 1]
 
-    cordic(ANGLE, anglesTan, tan, sin, cos)
+    corSin, corCos = cordic(ANGLE, anglesTan, tan, sin, cos)
+#   tangent(ANGLE, anglesTan, tan)
+    
+    
+    corTan = division(corSin,corCos,10)
 
-    
-    
-    
-
+    print("angle =", ANGLE)
+    print("sin =", corSin, "cos =", corCos, "tan =", corTan)
 
 main()
+
