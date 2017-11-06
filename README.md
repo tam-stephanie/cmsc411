@@ -20,10 +20,6 @@ Compute __sin(x)__, __cos(x)__, __tan(x)__, and __e<sup>x</sup>__ of 32-bit IEEE
 
 ## Documentation
 __sin(x)__
-Lookup Table:
-| Header One     | Header Two     |
-| :------------- | :------------- |
-| Item One       | Item Two       |
 
 __cos(x)__
 
