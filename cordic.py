@@ -2,13 +2,14 @@ import math
 
 ANGLE = 80.1
 
-
+#dividend/divisor 
+#what about is dividend = 0?
 def division(dividend, divisor, precision):
     whole = 0 
     iterate = 0
     while iterate < precision:
         
-        while dividend >= divisor:
+        while dividend >= divisor:      
             whole += 1 * 2**(-iterate)
             dividend -= divisor
             
