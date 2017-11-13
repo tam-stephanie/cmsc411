@@ -47,9 +47,23 @@ TAN_ANGLES:
     .word   0.1
 
 cordic:
-    STR     R0, [ , #0]
-    STR     R1,
+    STR     reg, target          #store target angle
+    LDR     currSin, #0
     STR     R2,
+
+gain:
+    LDR     R1, [R1, #1]        #gain=1
+    
+
+# putting in pseudocode for now
+loop:
+    STR     reg, range(0, 10)    #counter
+
+    CMP     currAngle, 0
+    BG      otherCalcVer
+
+otherCalcVer:
+
 
 
 main:

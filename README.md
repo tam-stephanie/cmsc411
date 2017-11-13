@@ -42,9 +42,5 @@ __tanh(x)__
 - [CORDIC for Dummies](http://bsvi.ru/uploads/CORDIC--_10EBA/cordic.pdf)
 - [Implementing CORDIC in PDP-11](https://programmer209.wordpress.com/2011/09/18/how-to-implement-cordic/)
 - [Division in ARM](http://www.tofla.iconbar.com/tofla/arm/arm02/index.htm)
-https://github.com/Maximell/Cordic
+- https://github.com/Maximell/Cordic
 - [Using ARMsim](http://armsim.cs.uvic.ca/AttachedFiles/ARMSim_UserGuide4Plus.pdf)
-
-
-
-
