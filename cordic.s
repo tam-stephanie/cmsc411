@@ -1,68 +1,45 @@
-SINE:
-    .word   0.707
-    .word   0.448
-    .word   0.242
-    .word   0.124
-    .word   0.063
-    .word   0.0314
-    .word   0.016
-    .word   0.007
-    .word   0.0035
-    .word   0.0017
+    .data
+@SINE:
+@    DCD   0.707, 0.448, 0.242, 0.124, 0.063, 0.0314, 0.016, 0.007, 0.0035, 0.0017
 
-COSINE:
-    .word   0.707
-    .word   0.894
-    .word   0.970
-    .word   0.992
-    .word   0.998
-    .word   0.999
-    .word   1
-    .word   1
-    .word   1
-    .word   1
+@COSINE:
+@    DCD   0.707, 0.894, 0.970, 0.992, 0.998, 0.999, 1, 1, 1, 1
 
 TANGENT:
-    .word   1
-    .word   0.5
-    .word   0.25
-    .word   0.125
-    .word   0.0625
-    .word   0.03125
-    .word   0.015635
-    .word   0.0078125
-    .word   0.00390625
-    .word   0.001953125
+    DCD   1, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015635, 0.0078125, 0.00390625, 0.001953125
 
 TAN_ANGLES:
-    .word   45.0
-    .word   26.6
-    .word   14.0
-    .word   7.1
-    .word   3.6
-    .word   1.8
-    .word   0.9
-    .word   0.4
-    .word   0.2
-    .word   0.1
+    DCD   45.0, 26.6, 14.0, 7.1, 3.6, 1.8, 0.9, 0.4, 0.2, 0.1
 
-GAIN:  @x value
-    .word   1.647                @ 1.64675
+@ x value
+GAIN:  DCD   0.607
 
+
+    .text
 cordic:
+    @ store pointers to lookups
+      LDR   R0, PC, #SINE
+      LDR   R1, PC, #COSINE
+      LDR   R2, PC, #TANGENT
+
+    @ handle constants
+    MOV     R6, #0               @ counter
+    MOV     R7, #10              @ size of array of angles
+    LDR     R2, []
+
+    STR     R1, []
     STR     reg, target          @ store target angle
     LDR     currSin, #0
     STR     R2,
 
 
 @ putting in pseudocode for now
-cordic_loop:
-    STR     reg, range(0, 10)    @ counter
-
+cordic_for_loop:
     CMP     currAngle, 0
-    BG      otherCalcVer
+    BGT     otherCalcVer
 
     @inside 'if' in py --> x+y<<i
+    LSL
 
 otherCalcVer:
 
