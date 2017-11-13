@@ -1,5 +1,5 @@
 # Project
-**Due Date: 2017 Dec. 3, 11:59PM**
+**Due Date: Sunday, Dec. 3, 2017; 11:59PM**
 
 **Presentation Date: TBD**
 
@@ -25,7 +25,11 @@ __cos(x)__
 
 __tan(x)__
 
+tan(x) = sin(x)/cos(x)
+
 __e<sup>x</sup>__
+
+e<sup>x</sup> = sinh(x) + cosh(x)
 
 __sec(x)__
 

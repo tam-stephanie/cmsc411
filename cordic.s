@@ -46,24 +46,23 @@ TAN_ANGLES:
     .word   0.2
     .word   0.1
 
+GAIN:  @x value
+    .word   1.647                @ 1.64675
+
 cordic:
-    STR     reg, target          #store target angle
+    STR     reg, target          @ store target angle
     LDR     currSin, #0
     STR     R2,
 
-gain:
-    LDR     R1, [R1, #1]        #gain=1
 
-gain_loop:
-    CMP     counter, len(cosTable) #loop here
-    #need to figure out the multiplication part
-
-# putting in pseudocode for now
+@ putting in pseudocode for now
 cordic_loop:
-    STR     reg, range(0, 10)    #counter
+    STR     reg, range(0, 10)    @ counter
 
     CMP     currAngle, 0
     BG      otherCalcVer
+
+    @inside 'if' in py --> x+y<<i
 
 otherCalcVer:
 
