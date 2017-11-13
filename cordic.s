@@ -53,10 +53,13 @@ cordic:
 
 gain:
     LDR     R1, [R1, #1]        #gain=1
-    
+
+gain_loop:
+    CMP     counter, len(cosTable) #loop here
+    #need to figure out the multiplication part
 
 # putting in pseudocode for now
-loop:
+cordic_loop:
     STR     reg, range(0, 10)    #counter
 
     CMP     currAngle, 0
