@@ -28,5 +28,5 @@ main:
   LDR   R4, [R0]            @ store GAIN_CONST
 
 for_loop:
-  ADD   R1, R1, #1
+  ADD   R1, R1, #1          @ increment loop counter
   MOV   R3, R1
