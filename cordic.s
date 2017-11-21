@@ -14,10 +14,19 @@ currAngle:
 
 
 .text
-main:  
+main:
   LDR   R0, =iter           @ load addresses
   LDR   R2, [R0]            @ store number of iterations
-  SUB   R2, R2, #1          @ for-loop counter
+  SUB   R2, R2, #1
+  MOV   R1, #0              @ for-loop counter
 
   LDR   R0, =currAngle      @ load address of angle
   LDR   R3, [R0]            @ store angle
+
+
+  LDR   R0, =GAIN_CONST     @ load address of gain constant
+  LDR   R4, [R0]            @ store GAIN_CONST
+
+for_loop:
+  ADD   R1, R1, #1
+  MOV   R3, R1
