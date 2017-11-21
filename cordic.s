@@ -1,48 +1,32 @@
-    .data
-@SINE:
-@    DCD   0.707, 0.448, 0.242, 0.124, 0.063, 0.0314, 0.016, 0.007, 0.0035, 0.0017
+.data
+GAIN_CONST:
+  .float 0.60725
 
-@COSINE:
-@    DCD   0.707, 0.894, 0.970, 0.992, 0.998, 0.999, 1, 1, 1, 1
+anglesTan:
+  .float  45.0, 26.565, 14.0362, 7.12502, 3.57633
+  .float	1.78991, 0.895174, 0.447614, 0.223811, 0.111906
 
-TANGENT:
-    DCD   1, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015635, 0.0078125, 0.00390625, 0.001953125
+iter:
+  .int 10                   @ number of angles & iterations
 
-TAN_ANGLES:
-    DCD   45.0, 26.6, 14.0, 7.1, 3.6, 1.8, 0.9, 0.4, 0.2, 0.1
-
-@ x value
-GAIN:  DCD   0.607
+currAngle:
+  .float  80.1
 
 
-    .text
-cordic:
-    @ store pointers to lookups
-      LDR   R0, PC, #SINE
-      LDR   R1, PC, #COSINE
-      LDR   R2, PC, #TANGENT
-
-    @ handle constants
-    MOV     R6, #0               @ counter
-    MOV     R7, #10              @ size of array of angles
-    LDR     R2, []
-
-    STR     R1, []
-    STR     reg, target          @ store target angle
-    LDR     currSin, #0
-    STR     R2,
-
-
-@ putting in pseudocode for now
-cordic_for_loop:
-    CMP     currAngle, 0
-    BGT     otherCalcVer
-
-    @inside 'if' in py --> x+y<<i
-    LSL
-
-otherCalcVer:
-
-
-
+.text
 main:
+  LDR   R0, =iter           @ load addresses
+  LDR   R2, [R0]            @ store number of iterations
+  SUB   R2, R2, #1
+  MOV   R1, #0              @ for-loop counter
+
+  LDR   R0, =currAngle      @ load address of angle
+  LDR   R3, [R0]            @ store angle
+
+
+  LDR   R0, =GAIN_CONST     @ load address of gain constant
+  LDR   R4, [R0]            @ store GAIN_CONST
+
+for_loop:
+  ADD   R1, R1, #1
+  MOV   R3, R1
