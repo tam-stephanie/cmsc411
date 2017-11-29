@@ -1,16 +1,19 @@
 .data
-GAIN_CONST:
-  .float 1.646768
+currCos:   @ 1.646768 * 2^16
+  .int  107922
+  1.646768
+currSin:
+  .int 0
 
-anglesTan:
-  .float  45.0, 26.565, 14.0362, 7.12502, 3.57633
-  .float	1.78991, 0.895174, 0.447614, 0.223811, 0.111906
+angles:   @ took original angles and manually multiplied by 2^16
+  .int  2949120, 170963, 919876, 466945, 234378, 117303,
+  .int  58666, 29294, 14667, 7333
 
 iter:
   .int 10                   @ number of angles & iterations
 
-currAngle:
-  .float  80.1
+currAngle:  @ x * 2^16
+  .int  5249433
 
 
 .text
@@ -20,17 +23,47 @@ main:
   SUB   R2, R2, #1
   MOV   R1, #0              @ for-loop counter
 
-  LDR   R0, =currAngle      @ load address of angle
+  LDR   R0, =currAngle      @ load address of test angle
   LDR   R3, [R0]            @ store angle
-  FMSR  S0, R3              @ load into floating-point register
+  LDR   R0, =currCos        @ load currCos
+  LDR   R4, [R0]            @ store currCos
+  LDR   R0, =currSin        @ load currSin
+  LDR   R5, [R0]            @ store currSin
+  LDR   R0, =angles         @ load tangent angles
 
-  LDR   R0, =GAIN_CONST     @ load address of gain constant
-  LDR   R4, [R0]            @ store GAIN_CONST
-  FMSR  S1, R4              @ load into fp reg
 
 for_loop:
+  CMP   R1, R2              @ compare to make sure loop works
+  BGE   end
+
   ADD   R1, R1, #1          @ increment loop counter
-  MOV   R3, R1
+  mov   R6, R1
+  MOV   R7, [R0, R6]        @ get angles[i]
 
+  CMP   R3, 0
+  BG    else                @ jump to 'else' part
 
-  VCMP  S0, 0
+if:                         @ if currAngle <= 0
+  ADD   R3, R3, R7          @ currAngle += angles[i]
+  ASR   R5, 16              @ shift right by 16 bits, not sure about arithmetic or logical
+  ADD   R8, R4, R5          @ newCos = currCos + (currSin * 2.0**(-i))
+
+  ASR   R4, 16
+  SUB   R9, R5, R4          @ newSin = currSin - (currCos * 2.0**(-i))
+
+  LDR   R4, [R8]            @ store new values
+  LDR   R5, [R9]
+
+else:                       @ if currAngle > 0
+  SUB   R3, R3, R7          @ currAngle += angles[i]
+  ASR   R5, 16              @ shift right by 16 bits, not sure about arithmetic or logical
+  SUB   R8, R4, R5          @ newCos = currCos - (currSin * 2.0**(-i))
+
+  ASR   R4, 16
+  ADD   R9, R5, R4          @ newSin = currSin + (currCos * 2.0**(-i))
+
+  LDR   R4, [R8]            @ store new values
+  LDR   R5, [R9]
+
+end:
+  SWI   0x11
