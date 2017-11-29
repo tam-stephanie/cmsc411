@@ -10,6 +10,8 @@ Team Members: Evan Andre, Ben Hazlett, Stephanie Tam
 ## Description
 Compute __sin(x)__, __cos(x)__, __tan(x)__, and __e<sup>x</sup>__ of 32-bit IEEE-754 floating point numbers using the CORDIC algorithm and write the code using ARMSim. Extra credit will be awarded for any additional functions generated (e.g., __sinh(x)__, __cosh(x)__, __tanh(x)__).
 
+**11/28/17 Update:** Only have to do __sin(x)__ and __cos(x)__ since integer division doesn't works and hyperbolic stuff doesn't seem to work.
+
 ### Grading
 |Part|Percentage|
 |---|---|
@@ -31,15 +33,6 @@ __e<sup>x</sup>__
 
 e<sup>x</sup> = sinh(x) + cosh(x)
 
-__sec(x)__
-
-  ...
-
-__sinh(x)__
-
-__cosh(x)__
-
-__tanh(x)__
 
 ### Helpful Notes
 **Links:**
