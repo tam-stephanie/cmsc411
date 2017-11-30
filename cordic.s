@@ -32,11 +32,11 @@ currAngle:
   @.int  5668864      @ z=86.5
   @.int  5701632      @ z=87
   @.int  5898233      @ z=89.9999
+  @.int  0            @ z=0
+  @.int  5898240      @ z=90
 
   @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
-  @.int  0            @ z=0         (cos=0.242; sin=0.145)
   @.int  5832310      @ z=88.994    (cos=0.7015; sin=0.938)
-  .int  5898240      @ z=90        (cos=0.98; sin=0.912)
   @.int  89926        @ z=1.37217   (cos=0.938; sin=0.131)
   @.int  268894       @ z=4.103     (cos=0.934; sin=0.864)
 
@@ -64,7 +64,6 @@ currAngle0:
   MOV   R4, #1              @ currCos = 1
   MOV   R5, #0              @ currSin = 0
   B     exit
-
 currAngle90:
   CMP   R3, #90             @ if currAngle = 90
   BLT   for_loop
@@ -82,7 +81,6 @@ for_loop:
   MOV   R9, R5              @ tempSin <-- currSin
   LSR   R8, R1              @ tempCos >> i
   LSR   R9, R1              @ tempSin >> i
-
   CMP   R3, #0              @ jump to appropriate section
   BGT   else
 
@@ -90,7 +88,6 @@ if:                         @ if currAngle <= 0
   ADD   R3, R3, R7          @ currAngle += angles[i]
   ADD   R4, R4, R9          @ currCos = currCos + tempSin
   SUB   R5, R5, R8          @ currSin = currSin - tempCos
-
   B     end_elif
 
 else:                       @ if currAngle > 0
