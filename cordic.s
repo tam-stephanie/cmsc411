@@ -1,29 +1,47 @@
 .data
-currCos:   @ 0.6072529350 * 2^16
+@ Multiply each piece of data by 2^16=65536 to forego using floating point
+@   registers and have extra precision.
+
+@ gainConstant = 0.6072529350
+currCos:  @ x
   .int  39796
-currSin:
+
+currSin:  @ y
   .int  0
 
-angles:   @ took original angles and manually multiplied by 2^16
-  .int  2949120, 1740963, 919876, 466945, 234378, 117303, 58666, 29334, 14667, 7333, 3666, 1833
+@ Original Angles:
+@   45.0, 26.565, 14.0362, 7.12502, 3.57633, 1.78991, 0.895174
+@   0.447614, 0.223811, 0.111906, 0.055953, 0.027977
+angles:
+  .int  2949120, 1740963, 919876, 466945, 234378, 117303, 58666
+  .int  29334, 14667, 7333, 3666, 1833
 
-iter:     @ number of angles & iterations
+@ Number of angles & iterations
+iter:
   .int  12
 
-currAngle:  @ z * 2^16
+@ Test angle, z
+currAngle:
+  @.int  347039       @ z=5.2954
   @.int  5249433      @ z=80.1
   @.int  1587937      @ z=24.23
-  @.int  5898240      @ z=90.0 (cos=0.98; sin=0.912)
   @.int  3179806      @ z=48.52
-  @.int  241172       @ z=3.68 (cos=749; sin=0.747)
-  @.int  0            @ z=0 (cos=0.242; sin=0.145)
-  @.int  4643979      @ z=70.8615
-  @.int  5832310      @ z=88.994 (cos=0.7015; sin=0.938)
-  @.int  655483       @ z=10.0012
-  @.int  347039       @ z=5.2954
-  @.int  89926        @ z=1.37217 (cos=0.938; sin=0.131)
-  @.int  268894       @ z=4.103 (cos=0.934; sin=0.864)
+  @.int  655425       @ z=10.001
+  @.int  4643985      @ z=70.86159
+  @.int  1966080      @ z=30.0
+  @.int  5668864      @ z=86.5
+  @.int  5701632      @ z=87
+  @.int  5898233      @ z=89.9999
 
+  @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
+  @.int  0            @ z=0         (cos=0.242; sin=0.145)
+  @.int  5832310      @ z=88.994    (cos=0.7015; sin=0.938)
+  .int  5898240      @ z=90        (cos=0.98; sin=0.912)
+  @.int  89926        @ z=1.37217   (cos=0.938; sin=0.131)
+  @.int  268894       @ z=4.103     (cos=0.934; sin=0.864)
+
+
+@ SEE FINAL REPORT FOR SOURCES USED
 .text
 main:
   LDR   R0, =iter           @ load & store number of iterations
@@ -39,7 +57,22 @@ main:
   LDR   R5, [R0]
   LDR   R0, =angles         @ load angles[]
 
+@ Handle edge cases
+currAngle0:
+  CMP   R3, #0              @ if currAngle = 0
+  BGT   currAngle90
+  MOV   R4, #1              @ currCos = 1
+  MOV   R5, #0              @ currSin = 0
+  B     exit
 
+currAngle90:
+  CMP   R3, #90             @ if currAngle = 90
+  BLT   for_loop
+  MOV   R4, #0              @ currCos = 0
+  MOV   R5, #1              @ currSin = 1
+  B     exit
+
+@ Back to main part of code
 for_loop:
   MOV   R6, R1
   LSL   R6, #2              @ offset by a byte
