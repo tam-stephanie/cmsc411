@@ -30,11 +30,13 @@ currAngle:
   @.int  4643985      @ z=70.86159
   @.int  1966080      @ z=30.0
   @.int  5668864      @ z=86.5
-  @.int  5701632      @ z=87
-  @.int  5898233      @ z=89.9999
   @.int  0            @ z=0
   @.int  5898240      @ z=90
+  @.int  286180       @ z=4.36677
+  @.int  2949120      @ z=45
+  @.int  3932160      @ z=60
 
+  .int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
   @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
   @.int  5832310      @ z=88.994    (cos=0.7015; sin=0.938)
   @.int  89926        @ z=1.37217   (cos=0.938; sin=0.131)
@@ -60,13 +62,13 @@ main:
 @ Handle edge cases
 currAngle0:
   CMP   R3, #0              @ if currAngle = 0
-  BGT   currAngle90
+  BNE   currAngle90
   MOV   R4, #1              @ currCos = 1
   MOV   R5, #0              @ currSin = 0
   B     exit
 currAngle90:
   CMP   R3, #90             @ if currAngle = 90
-  BLT   for_loop
+  BNE   for_loop
   MOV   R4, #0              @ currCos = 0
   MOV   R5, #1              @ currSin = 1
   B     exit
