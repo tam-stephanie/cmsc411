@@ -159,12 +159,7 @@ next:
 divide_end:
  MOV R0, R0, LSL#4			@we started by shifting 4 so we have to shift back
 
- 
- @MOV       R25, R24        @exit routine
 
-@MOV R5, #5
-@MOV R6, #3
-@sdiv R5, R6
 
 
 
