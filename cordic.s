@@ -2,6 +2,9 @@
 @ Multiply each piece of data by 2^16=65536 to forego using floating point
 @   registers and have extra precision.
 
+values_store:
+  .skip 100
+
 @ gainConstant = 0.6072529350
 currCos:  @ x
   .int  39796
@@ -35,8 +38,10 @@ currAngle:
   @.int  286180       @ z=4.36677
   @.int  2949120      @ z=45
   @.int  3932160      @ z=60
+  .int  5636096      @ z=86
+  @.int  5556371      @ z=84.7835
 
-  .int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
+  @.int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
   @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
   @.int  5832310      @ z=88.994    (cos=0.7015; sin=0.938)
   @.int  89926        @ z=1.37217   (cos=0.938; sin=0.131)
@@ -46,125 +51,96 @@ currAngle:
 @ SEE FINAL REPORT FOR SOURCES USED
 .text
 main:
-  LDR   R0, =iter           @ load & store number of iterations
-  LDR   R2, [R0]
-  SUB   R2, R2, #1          @ size - 1 to not go out-of-bounds
-  MOV   R1, #0              @ for-loop counter, i
+  LDR    R0, =iter           @ load & store number of iterations
+  LDR    R2, [R0]
+  SUB    R2, R2, #1          @ size - 1 to not go out-of-bounds
+  MOV    R1, #0              @ for-loop counter, i
 
-  LDR   R0, =currAngle      @ load & store currAngle
-  LDR   R3, [R0]
-  LDR   R0, =currCos        @ load & store currCos
-  LDR   R4, [R0]
-  LDR   R0, =currSin        @ load & store currSin
-  LDR   R5, [R0]
-  LDR   R0, =angles         @ load angles[]
+  LDR    R0, =currAngle      @ load & store currAngle
+  LDR    R3, [R0]
+  LDR    R0, =currCos        @ load & store currCos
+  LDR    R4, [R0]
+  LDR    R0, =currSin        @ load & store currSin
+  LDR    R5, [R0]
+  LDR    R0, =angles         @ load angles[]
 
 @ Handle edge cases
 currAngle0:
-  CMP   R3, #0              @ if currAngle = 0
-  BNE   currAngle90
-  MOV   R4, #1              @ currCos = 1
-  MOV   R5, #0              @ currSin = 0
-  B     exit
+  CMP    R3, #0              @ if currAngle = 0
+  BNE    currAngle90
+  MOV    R4, #1              @ currCos = 1
+  MOV    R5, #0              @ currSin = 0
+  B      exit
 currAngle90:
-  CMP   R3, #90             @ if currAngle = 90
-  BNE   for_loop
-  MOV   R4, #0              @ currCos = 0
-  MOV   R5, #1              @ currSin = 1
-  B     exit
+  CMP    R3, #90             @ if currAngle = 90
+  BNE    for_loop
+  MOV    R4, #0              @ currCos = 0
+  MOV    R5, #1              @ currSin = 1
+  B      exit
 
 @ Back to main part of code
 for_loop:
-  MOV   R6, R1
-  LSL   R6, #2              @ offset by a byte
-  LDR   R7, [R0, R6]        @ get angles[i]
+  MOV    R6, R1
+  LDR    R7, [R0, R6, LSL#2] @ get angles[i] w/ offset
 
-  MOV   R8, R4              @ tempCos <-- currCos
-  MOV   R9, R5              @ tempSin <-- currSin
-  LSR   R8, R1              @ tempCos >> i
-  LSR   R9, R1              @ tempSin >> i
-  CMP   R3, #0              @ jump to appropriate section
-  BGT   else
+  MOV    R8, R4              @ tempCos <-- currCos
+  MOV    R9, R5              @ tempSin <-- currSin
+  LSR    R8, R1              @ tempCos >> i
+  LSR    R9, R1              @ tempSin >> i
+  CMP    R3, #0              @ jump to appropriate section
+  BGT    else
 
-if:                         @ if currAngle <= 0
-  ADD   R3, R3, R7          @ currAngle += angles[i]
-  ADD   R4, R4, R9          @ currCos = currCos + tempSin
-  SUB   R5, R5, R8          @ currSin = currSin - tempCos
-  B     end_elif
+if:                          @ if currAngle <= 0
+  ADD    R3, R3, R7          @ currAngle += angles[i]
+  ADD    R4, R4, R9          @ currCos = currCos + tempSin
+  SUB    R5, R5, R8          @ currSin = currSin - tempCos
+  B      end_elif
 
-else:                       @ if currAngle > 0
-  SUB   R3, R3, R7          @ currAngle -= angles[i]
-  SUB   R4, R4, R9          @ currCos = currCos - tempSin
-  ADD   R5, R5, R8          @ currSin = currSin + tempCos
+else:                        @ if currAngle > 0
+  SUB    R3, R3, R7          @ currAngle -= angles[i]
+  SUB    R4, R4, R9          @ currCos = currCos - tempSin
+  ADD    R5, R5, R8          @ currSin = currSin + tempCos
 
 end_elif:
-  ADD   R1, R1, #1          @ increment loop counter
-  CMP   R1, R2              @ compare to make sure at right iteration
-  BNE   for_loop
+  ADD    R1, R1, #1          @ increment loop counter
+  CMP    R1, R2              @ compare to make sure at right iteration
+  BNE    for_loop
 
-@ division in ARM LEGv8 to calculate tan(z)
+
+@ division to calculate tan(z) = sin(z)/cos(z)
 tan_div:
+  MOV    R1, R5              @ move sin and cos into R1 and R2
+  MOV    R2, R4
+  MOV    R1, R1, LSR #4      @ shift right 4 so we don't shift more than 32 left, total
+  CMP    R2, #0              @ check for divide by zero!
+  BEQ    divide_end
 
-@4 = cos 5 = sin
-@ tan = sin/cos
-@R1/R2
-mov R1, R5
-mov R2, R4	@move sin and cos into R1 and R2
-mov R1, R1, LSR#4	@we shift 4 right so that we do not shift more than a total of 32 left
-@mov R2, R2, LSR#4
+  MOV    R0, #0              @ clear R0 to accumulate result
+  MOV    R3, #1              @ set bit 0 in R3, which will be shifted left then right
+  LSL    R3, #16
 
-
-
- CMP             R2, #0
- BEQ divide_end
- @check for divide by zero!				  
-				  
-				  
-	
-
- MOV      R0,#0     @clear R0 to accumulate result
- MOV      R3,#1     @set bit 0 in R3, which will be
-                    @shifted left then right
- MOV      R3, LSL#16
 start:
- CMP      R2,R1
- MOVLS    R2,R2,LSL#1
- MOVLS    R3,R3,LSL#1
- BLS      start
- @shift R2 left until it is about to
- @be bigger than R1
- @shift R3 left in parallel in order
- @to flag how far we have to go
+  CMP    R2, R1
+  MOVLS  R2, R2, LSL #1      @ shift R2 left until it is about to be bigger than R1
+  MOVLS  R3, R3, LSL #1      @ shift R3 left in parallel in order to flag how far we have to go
+  BLS    start
 
-
-
-
-
-	
 next:
- CMP       R1,R2      @carry set if R1>R2 (don't ask why)
- SUBCS     R1,R1,R2   @subtract R2 from R1 if this would
-                      @give a positive answer
- ADDCS     R0,R0,R3   @and add the current bit in R3 to
-                      @the accumulating answer in R0
+  CMP    R1, R2              @ carry set if R1 > R2
+  SUBCS  R1, R1, R2          @ R1 - R2, if it would give a positive answer
+  ADDCS  R0, R0, R3          @ add the current bit in R3 to accumulating answer in R0
 
-
- MOVS      R3,R3,LSR#1     @Shift R3 right into carry flag
- MOVCC     R2,R2,LSR#1     @and if bit 0 of R3 was zero, also
-                           @shift R2 right
- BCC       next            @If carry not clear, R3 has shifted
-                           @back to where it started, and we
-                           @can end
+  MOVS   R3, R3, LSR #1      @ shift R3 right into carry flag
+  MOVCC  R2, R2, LSR #1      @ if R3(bit0) = 0, shift R2 right
+  BCC    next                @ if carry not clear, R3 shifted back start --> end
 
 divide_end:
- MOV R0, R0, LSL#4			@we started by shifting 4 so we have to shift back
-
-
-
-
-
-
-
+  MOV    R0, R0, LSL #4     @ must shift back since initially shifting by 4 bits
 
 exit:
+  LDR    R9, =values_store   @ store values in "array" in mem
+  STR    R4, [R9]
+  STR    R5, [R9, #4]
+  STR    R0, [R9, #8]
+
   SWI   0x11
