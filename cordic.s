@@ -102,5 +102,9 @@ end_elif:
   CMP   R1, R2              @ compare to make sure at right iteration
   BNE   for_loop
 
+@ division in ARM LEGv8 to calculate tan(z)
+tan_div:
+
+
 exit:
   SWI   0x11
