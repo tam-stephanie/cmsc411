@@ -107,6 +107,9 @@ tan_div:
 
 @4 = cos 5 = sin
 @ tan = sin/cos
+@R1/R2
+mov R1, R5
+mov R2, R4	@move sin and cos into R1 and R2
 
 
 
@@ -121,6 +124,7 @@ tan_div:
  MOV      R0,#0     @clear R0 to accumulate result
  MOV      R3,#1     @set bit 0 in R3, which will be
                     @shifted left then right
+ MOV      R3, LSL#16
 start:
  CMP      R2,R1
  MOVLS    R2,R2,LSL#1
