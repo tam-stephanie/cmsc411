@@ -30,7 +30,7 @@ currAngle:
   @.int  1587937      @ z=24.23
   @.int  3179806      @ z=48.52
   @.int  655425       @ z=10.001
-  @.int  4643985      @ z=70.86159
+  .int  4643985      @ z=70.86159
   @.int  1966080      @ z=30.0
   @.int  5668864      @ z=86.5
   @.int  0            @ z=0
@@ -38,7 +38,7 @@ currAngle:
   @.int  286180       @ z=4.36677
   @.int  2949120      @ z=45
   @.int  3932160      @ z=60
-  .int  5636096      @ z=86
+  @.int  5636096      @ z=86
   @.int  5556371      @ z=84.7835
 
   @.int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
@@ -122,7 +122,7 @@ tan_div:
 start:
   CMP    R2, R1
   MOVLS  R2, R2, LSL #1      @ shift R2 left until it is about to be bigger than R1
-  MOVLS  R3, R3, LSL #1      @ shift R3 left in parallel in order to flag how far we have to go
+  MOVLS  R3, R3, LSL #1      @ shift R3 left in parallel in order to flag how far we have to go (also indicates # of iterations)
   BLS    start
 
 next:
@@ -131,8 +131,8 @@ next:
   ADDCS  R0, R0, R3          @ add the current bit in R3 to accumulating answer in R0
 
   MOVS   R3, R3, LSR #1      @ shift R3 right into carry flag
-  MOVCC  R2, R2, LSR #1      @ if R3(bit0) = 0, shift R2 right
-  BCC    next                @ if carry not clear, R3 shifted back start --> end
+  MOVCC  R2, R2, LSR #1      @ if R3 bit0 = 0, shift R2 right
+  BCC    next                @ if carry not clear, R3 shifted back to where it started, then end
 
 divide_end:
   MOV    R0, R0, LSL #4     @ must shift back since initially shifting by 4 bits
