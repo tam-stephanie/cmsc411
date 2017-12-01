@@ -30,16 +30,14 @@ currAngle:
   @.int  1587937      @ z=24.23
   @.int  3179806      @ z=48.52
   @.int  655425       @ z=10.001
-  .int  4643985      @ z=70.86159
+  @.int  4643985      @ z=70.86159
   @.int  1966080      @ z=30.0
   @.int  5668864      @ z=86.5
-  @.int  0            @ z=0
   @.int  5898240      @ z=90
+  @.int  0            @ z=0
   @.int  286180       @ z=4.36677
   @.int  2949120      @ z=45
-  @.int  3932160      @ z=60
-  @.int  5636096      @ z=86
-  @.int  5556371      @ z=84.7835
+  .int  3932160      @ z=60
 
   @.int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
   @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
@@ -70,12 +68,14 @@ currAngle0:
   BNE    currAngle90
   MOV    R4, #1              @ currCos = 1
   MOV    R5, #0              @ currSin = 0
+  MOV    R0, #0              @ tangent = 0
   B      exit
 currAngle90:
   CMP    R3, #90             @ if currAngle = 90
   BNE    for_loop
   MOV    R4, #0              @ currCos = 0
   MOV    R5, #1              @ currSin = 1
+  MOV    R0, #0              @ tangent = UNDEFINED
   B      exit
 
 @ Back to main part of code
