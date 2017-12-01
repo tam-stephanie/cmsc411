@@ -110,7 +110,8 @@ tan_div:
 @R1/R2
 mov R1, R5
 mov R2, R4	@move sin and cos into R1 and R2
-
+mov R1, R1, LSR#4
+mov R2, R2, LSR#4
 
 
 
@@ -156,6 +157,9 @@ next:
                            @can end
 
 divide_end:
+ MOV R0, R0, LSL#4			@we started by shifting 4 so we have to shift back
+
+ 
  @MOV       R25, R24        @exit routine
 
 @MOV R5, #5
