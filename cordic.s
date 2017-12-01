@@ -110,7 +110,7 @@ tan_div:
 @R1/R2
 mov R1, R5
 mov R2, R4	@move sin and cos into R1 and R2
-mov R1, R1, LSR#4
+mov R1, R1, LSR#4	@we shift 4 right so that we do not shift more than a total of 32 left
 @mov R2, R2, LSR#4
 
 
