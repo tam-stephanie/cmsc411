@@ -2,6 +2,7 @@
 @ Multiply each piece of data by 2^16=65536 to forego using floating point
 @   registers and have extra precision.
 
+@ placeholder for where to store values in memory later
 values_store:
   .skip 100
 
@@ -25,28 +26,9 @@ iter:
 
 @ Test angle, z
 currAngle:
-  @.int  347039       @ z=5.2954
-  @.int  5249433      @ z=80.1
-  @.int  1587937      @ z=24.23
-  @.int  3179806      @ z=48.52
-  @.int  655425       @ z=10.001
-  @.int  4643985      @ z=70.86159
-  @.int  1966080      @ z=30.0
-  @.int  5668864      @ z=86.5
-  @.int  5898240      @ z=90
-  .int  0            @ z=0
-  @.int  286180       @ z=4.36677
-  @.int  2949120      @ z=45
-  @.int  3932160      @ z=60
-
-  @.int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
-  @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
-  @.int  5832310      @ z=88.994    (cos=0.7015; sin=0.938)
-  @.int  89926        @ z=1.37217   (cos=0.938; sin=0.131)
-  @.int  268894       @ z=4.103     (cos=0.934; sin=0.864)
+  .int  ???          @ z = ? * 65536
 
 
-@ SEE FINAL REPORT FOR SOURCES USED
 .text
 main:
   LDR    R0, =iter           @ load & store number of iterations
