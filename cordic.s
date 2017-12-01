@@ -34,10 +34,10 @@ currAngle:
   @.int  1966080      @ z=30.0
   @.int  5668864      @ z=86.5
   @.int  5898240      @ z=90
-  @.int  0            @ z=0
+  .int  0            @ z=0
   @.int  286180       @ z=4.36677
   @.int  2949120      @ z=45
-  .int  3932160      @ z=60
+  @.int  3932160      @ z=60
 
   @.int  5881856      @ z=89.75      (cos=0.989; sin=0.917)
   @.int  241172       @ z=3.68      (cos=0.749; sin=0.747)
@@ -68,14 +68,15 @@ currAngle0:
   BNE    currAngle90
   MOV    R4, #1              @ currCos = 1
   MOV    R5, #0              @ currSin = 0
-  MOV    R0, #0              @ tangent = 0
+  MOV    R6, #0              @ tangent = 0
   B      exit
+
 currAngle90:
-  CMP    R3, #90             @ if currAngle = 90
+  CMP    R3, #5898240        @ if currAngle = 90
   BNE    for_loop
   MOV    R4, #0              @ currCos = 0
   MOV    R5, #1              @ currSin = 1
-  MOV    R0, #0              @ tangent = UNDEFINED
+  MOV    R6, #0              @ tangent = UNDEFINED
   B      exit
 
 @ Back to main part of code
@@ -115,7 +116,7 @@ tan_div:
   CMP    R2, #0              @ check for divide by zero!
   BEQ    divide_end
 
-  MOV    R0, #0              @ clear R0 to accumulate result
+  MOV    R6, #0              @ clear R6 to accumulate result
   MOV    R3, #1              @ set bit 0 in R3, which will be shifted left then right
   LSL    R3, #16
 
@@ -128,19 +129,19 @@ start:
 next:
   CMP    R1, R2              @ carry set if R1 > R2
   SUBCS  R1, R1, R2          @ R1 - R2, if it would give a positive answer
-  ADDCS  R0, R0, R3          @ add the current bit in R3 to accumulating answer in R0
+  ADDCS  R6, R6, R3          @ add the current bit in R3 to accumulating answer in R6
 
   MOVS   R3, R3, LSR #1      @ shift R3 right into carry flag
   MOVCC  R2, R2, LSR #1      @ if R3 bit0 = 0, shift R2 right
   BCC    next                @ if carry not clear, R3 shifted back to where it started, then end
 
 divide_end:
-  MOV    R0, R0, LSL #4     @ must shift back since initially shifting by 4 bits
+  MOV    R6, R6, LSL #4     @ must shift back since initially shifting by 4 bits
 
 exit:
-  LDR    R9, =values_store   @ store values in "array" in mem
-  STR    R4, [R9]
-  STR    R5, [R9, #4]
-  STR    R0, [R9, #8]
+  LDR    R0, =values_store   @ store values in "array" in mem
+  STR    R4, [R0]
+  STR    R5, [R0, #4]
+  STR    R6, [R0, #8]
 
   SWI   0x11
