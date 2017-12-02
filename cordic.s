@@ -2,9 +2,9 @@
 @ 12/2/2017
 @ Term Project
 @ Written by Evan Andre, Benjamin Hazlett, and Stephanie Tam
-@ This project calculates sin and cos using the cordic in ARM. 
-@ It then computes tan by doing sin / cos without using division. 
-@ It then stores the 3 results in memory. 
+@ This project calculates sin and cos using the cordic in ARM.
+@ It then computes tan by doing sin / cos without using division.
+@ It then stores the 3 results in memory.
 
 
 
@@ -37,7 +37,7 @@ iter:
 
 @ Test angle, z
 currAngle:
-  .int  ???          @ z = ? * 65536
+  .int  4643985         @ z = 70.86159
 
 
 .text
