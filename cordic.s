@@ -99,8 +99,8 @@ tan_div:
   BEQ    divide_end
 
   MOV    R6, #0              @ clear R6 to accumulate result
-  MOV    R3, #1              @ set bit 0 in R3, which will be shifted left then right
-  LSL    R3, #16
+  MOV    R3, #1              @ set bit 0 in R3, which will be shifted left then right. keeps track which bit should be added to tan
+  LSL    R3, #16             @ since there is 16 bits to the right of the decimal point it needs to be shifted 16 bits
 
 start:
   CMP    R2, R1
