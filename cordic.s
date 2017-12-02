@@ -1,3 +1,14 @@
+@ CMSC411
+@ 12/2/2017
+@ Term Project
+@ Written by Evan Andre, Benjamin Hazlett, and Stephanie Tam
+@ This project calculates sin and cos using the cordic in ARM. 
+@ It then computes tan by doing sin / cos without using division. 
+@ It then stores the 3 results in memory. 
+
+
+
+
 .data
 @ Multiply each piece of data by 2^16=65536 to forego using floating point
 @   registers and have extra precision.
